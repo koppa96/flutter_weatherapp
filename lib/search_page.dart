@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/state_models.dart';
 import 'package:provider/provider.dart';
+import 'package:weather_app/weather_page.dart';
+import 'package:weather_app/weather_service.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key, this.title = ""}) : super(key: key);
@@ -22,6 +24,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final _controller = TextEditingController();
+  final _weatherService = const WeatherService();
 
   @override
   Widget build(BuildContext context) {
@@ -30,82 +33,86 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            TextField(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: TextField(
               controller: _controller,
               decoration: InputDecoration(
-                  hintText: "Type the name of the city",
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      setState(() {
-                        state.changeSearchText(_controller.text);
-                        state
-                            .setFuture(Future.delayed(Duration(seconds: 5), () {
-                          return <City>[
-                            City(1, "Budapest"),
-                            City(2, "Veszprém"),
-                            City(3, "Székesfehérvár"),
-                            City(4, "Győr")
-                          ];
-                        }));
-                      });
-                    },
-                  )),
+                hintText: "Type the name of the city",
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      state.changeSearchText(_controller.text);
+                    });
+                  },
+                ),
+              ),
             ),
-            FutureBuilder(
-              future: state.cities,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasData) {
-                    var data = snapshot.data as List<City>;
-                    if (data.length == 0) {
-                      return Expanded(
-                        child: Center(
-                          child: Text(state.searchText == "" || state.searchText == null
-                              ? "Type a city name and tap the search button."
-                              : "No results found for \"${state.searchText}\"."),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: ListView.separated(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(top: 8, bottom: 8),
-                                child: Text(data[index].name),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return Divider();
-                            },
-                            itemCount: data.length),
-                      );
-                    }
-                  } else {
+          ),
+          FutureBuilder(
+            future: state.cities,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  var data = snapshot.data as List<City>;
+                  if (data.length == 0) {
                     return Expanded(
                       child: Center(
-                        child: Text("An error occurred."),
+                        child: Text(
+                          state.searchText == ""
+                              ? "Type a city name and tap the search button."
+                              : "No results found for \"${state.searchText}\".",
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: ListView.separated(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              onTap: () {
+                                state.setSelectedCity(data[index]);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return WeatherPage();
+                                  },
+                                ));
+                              },
+                              title: Text(data[index].name),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return Divider();
+                          },
+                          itemCount: data.length,
+                        ),
                       ),
                     );
                   }
                 } else {
                   return Expanded(
-                      child: Center(
-                    child: CircularProgressIndicator(),
-                  ));
+                    child: Center(
+                      child: Text("An error occurred."),
+                    ),
+                  );
                 }
-              },
-            ),
-          ],
-        ),
+              } else {
+                return Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                ));
+              }
+            },
+          ),
+        ],
       ),
     );
   }
