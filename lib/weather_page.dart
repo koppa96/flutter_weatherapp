@@ -39,7 +39,7 @@ class _WeatherPageState extends State<WeatherPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Today's weather", style: theme.textTheme.headline4, textAlign: TextAlign.start,),
+                          Text("Today's weather", style: theme.textTheme.headline5, textAlign: TextAlign.start,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -48,7 +48,7 @@ class _WeatherPageState extends State<WeatherPage> {
                                 width: 100,
                                 child: SvgPicture.network("https://www.metaweather.com/static/img/weather/${data.todaysWeather.weatherStateAbbreviation}.svg"),
                               ),
-                              Text(data.todaysWeather.weatherStateName, style: theme.textTheme.headline5,),
+                              Text(data.todaysWeather.weatherStateName, style: theme.textTheme.headline6,),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
@@ -63,9 +63,9 @@ class _WeatherPageState extends State<WeatherPage> {
                             child: Column(
                               children: [
                                 WeatherProperty(
-                                    icon: Icons.north_east,
-                                    propertyName: "Wind direction",
-                                    propertyValue: data.todaysWeather.windDirection
+                                  icon: Icons.north_east,
+                                  propertyName: "Wind direction",
+                                  propertyValue: data.todaysWeather.windDirection
                                 ),
                                 WeatherProperty(
                                   icon: Icons.speed,
@@ -90,7 +90,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               ],
                             ),
                           ),
-                          Text("Next day's weather", style: theme.textTheme.headline4,),
+                          Text("Next day's weather", style: theme.textTheme.headline5,),
                         ],
                       ),
                     ),
@@ -121,7 +121,7 @@ class _WeatherPageState extends State<WeatherPage> {
                                   ),
                                 ],
                               ),
-                              Text(data.nextDaysWeather[index].weatherStateName, style: theme.textTheme.headline5,),
+                              Text(data.nextDaysWeather[index].weatherStateName, style: theme.textTheme.headline6,),
                               Text(DateFormat("E").format(data.nextDaysWeather[index].applicableDate), style: theme.textTheme.headline6,),
                             ],
                           ),

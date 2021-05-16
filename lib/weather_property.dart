@@ -21,10 +21,10 @@ class WeatherProperty extends StatelessWidget {
                 padding: EdgeInsets.only(right: 8),
                 child: Icon(icon, size: 40,),
               ),
-              Text(propertyName, style: theme.textTheme.headline5,)
+              Text(propertyName, style: theme.textTheme.headline6,)
             ],
           ),
-          Text(propertyValue, style: theme.textTheme.headline5,)
+          Text(propertyValue, style: theme.textTheme.headline6,)
         ],
       ),
     );
